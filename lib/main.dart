@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'qr_generator.dart';
-import 'qr_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart'; // Add this import
 import 'package:url_launcher/url_launcher.dart';
 import 'feedback_form_page.dart';
 import 'profile.dart';
-
+//import 'qr_generator.dart';
+import 'qr_scanner.dart';
+import 'business_profile.dart';
+import 'contact_page.dart';
+import 'website_page.dart';
+import 'text_page.dart';
+import 'gallery_scanner.dart';
+import 'mail_page.dart';
+import 'package:qr_code_tools/qr_code_tools.dart';
 
 void main() {
   runApp(MyApp());
@@ -58,10 +64,7 @@ class HomePage extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.contact_mail),
               title: Text('Contact Us'),
-              onTap:
-                _launchEmail
-                // Handle the contact us action
-
+              onTap: _launchEmail, // Correctly reference the function
             ),
             ListTile(
               leading: Icon(Icons.share),
@@ -83,9 +86,8 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context)=>FeedbackFormPage()),
+                  MaterialPageRoute(builder: (context) => FeedbackFormPage()),
                 );
-                // Handle the send feedback action
               },
             ),
             ListTile(
@@ -104,15 +106,13 @@ class HomePage extends StatelessWidget {
           crossAxisCount: 3,
           children: <Widget>[
             _buildGridItem(context, 'Profile', Icons.person, ProfilePage()),
+            _buildGridItem(context, 'Business', Icons.business, BusinessProfile()),
+            _buildGridItem(context, 'Contact', Icons.contact_phone, ContactPage()),
+            _buildGridItem(context, 'Website', Icons.web, WebsitePage()),
+            _buildGridItem(context, 'Text', Icons.text_fields, TextPage()),
+            _buildGridItem(context, 'Mail', Icons.email, MailPage()),
 
-            _buildGridItem(context, 'Business', Icons.business, 'BIZCARD:N:John Doe;X:CEO;T:1234567890;E:john.doe@example.com;W:www.example.com;C:Example Inc;;'),
-            _buildGridItem(context, 'Contact', Icons.contact_phone, 'tel:1234567890'),
-            _buildGridItem(context, 'Message', Icons.message, 'sms:1234567890:Hello'),
-            _buildGridItem(context, 'Text', Icons.text_fields, 'Hello World'),
-            _buildGridItem(context, 'Mail', Icons.email, 'mailto:john.doe@example.com'),
-            _buildGridItem(context, 'Website', Icons.web, 'https://www.example.com'),
-            _buildGridItem(context, 'Company', Icons.people, 'COMPANY:Example Inc;ADDRESS:1234 Street Name, City, Country;;'),
-            _buildGridItem(context, 'Rate Us', Icons.star, 'https://www.example.com/rateus'),
+
           ],
         ),
       ),
@@ -122,9 +122,9 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => QrGeneratorPage(qrData: 'Hello World')));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryScannerPage()));
               },
-              child: Text('Generate QR Code'),
+              child: Text('pick from Gallery'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -138,17 +138,26 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String title, IconData icon, String data) {
+  Widget _buildGridItem(BuildContext context, String title, IconData icon, dynamic data) {
     return Card(
       margin: EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QrGeneratorPage(qrData: data),
-            ),
-          );
+          if (data is String) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ),
+            );
+          } else if (data is Widget) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => data,
+              ),
+            );
+          }
         },
         child: Center(
           child: Column(
@@ -164,7 +173,6 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
 
 void _launchEmail() async {
   final Uri emailLaunchUri = Uri(

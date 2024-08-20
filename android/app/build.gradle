@@ -25,8 +25,10 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.untitled"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = flutter.
     ndkVersion = flutter.ndkVersion
+    compileSdkVersion 33
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -40,14 +42,18 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        versionCode = 1
+        versionName = "1.0"
+        compileSdkVersion 33
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+            minifyEnabled false
+            https://chatgpt.com/c/22dcc19f-0517-460d-9fb9-63d70e29e0ac#:~:text=Enable%20code%20shrinking-,shrinkResources%20true,-//%20Enable%20resource%20shrinking
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig = signingConfigs.debug
         }
     }

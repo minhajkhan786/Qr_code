@@ -31,14 +31,28 @@ class _QrScannerPageState extends State<QrScannerPage> {
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+                borderColor: Colors.red,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 10,
+                cutOutSize: 300,
+              ),
             ),
           ),
           Expanded(
             flex: 1,
             child: Center(
-              child: (result != null)
-                  ? Text('Data: ${result!.code}')
-                  : Text('Scan a code'),
+              child: result != null
+                  ? Text(
+                'Data: ${result!.code}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              )
+                  : Text(
+                'Scan a code',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ),
         ],
